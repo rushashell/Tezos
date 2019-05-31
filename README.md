@@ -1,2 +1,2 @@
-# crypto
-Crypto repository with templates,how-to's and other usable scripts
+# Tezos
+Tezos repository with templates, how-to's and other usable scripts
