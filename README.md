@@ -1,2 +1,2 @@
 # Tezos
-Tezos repository with templates, how-to's and other usable scripts
+Tezos repository with templates, how-to's and other usable scripts.
