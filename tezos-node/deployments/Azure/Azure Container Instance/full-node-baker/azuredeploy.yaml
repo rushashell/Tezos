@@ -1,0 +1,181 @@
+name: tezos-alphanet-group
+type: Microsoft.ContainerInstance/containerGroups
+apiVersion: 2018-10-01
+location: westeurope
+tags: null
+properties:
+  osType: Linux
+  restartPolicy: OnFailure
+  ipAddress:
+    type: Public
+    ports:
+      # Node port 
+    - port: '9732'
+      protocol: tcp
+      # RPC port
+    #- port: '8732'
+    #  protocol: tcp
+    dnsNameLabel: 'mysweetxtzdnslabel'
+  volumes:
+  - name: node-data
+    emptyDir: {}
+  - name: client-data
+    emptyDir: {}  
+  containers:
+  - name: tezos-node
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - '/bin/sh'
+      - '-c'
+      - "'tezos-node"
+      - 'identity'
+      - 'generate;'
+      - 'tezos-node'
+      - "run'"
+      #- '--net-addr'
+      #- ':9732'
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 4
+      ports:
+      - port: 9732
+      - port: 8732
+      volumeMounts:
+      - name: node-data
+        mountPath: '/var/run/tezos/node'
+        readOnly: false
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
+
+  - name: tezos-baker-003-psddfki3
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - 'tezos-baker'
+      - '--max-priority'
+      - '128'
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+        limits:
+          cpu: 0.2
+          memoryInGb: 0.2
+      environmentVariables:
+        - name: 'PROTOCOL'
+          value: '003-PsddFKi3'
+      volumeMounts:
+      - name: node-data
+        mountPath: '/var/run/tezos/node'
+        readOnly: true
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
+
+  - name: tezos-baker-004-pt24m4xi
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - 'tezos-baker'
+      - '--max-priority'
+      - '128'
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+        limits:
+          cpu: 0.2
+          memoryInGb: 0.2
+      environmentVariables:
+        - name: 'PROTOCOL'
+          value: '004-Pt24m4xi'
+      volumeMounts:
+      - name: node-data
+        mountPath: '/var/run/tezos/node'
+        readOnly: true
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
+
+  - name: tezos-endorser-003-psddfki3
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - 'tezos-endorser'
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+        limits:
+          cpu: 0.1
+          memoryInGb: 0.1
+      environmentVariables:
+        - name: 'PROTOCOL'
+          value: '003-PsddFKi3'
+      volumeMounts:
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
+
+  - name: tezos-endorser-004-pt24m4xi
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - 'tezos-endorser'
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+        limits:
+          cpu: 0.1
+          memoryInGb: 0.1
+      environmentVariables:
+        - name: 'PROTOCOL'
+          value: '003-004-Pt24m4xi'
+      volumeMounts:
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
+
+  - name: tezos-accuser-003-psddfki3
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - 'tezos-accuser'
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+        limits:
+          cpu: 0.1
+          memoryInGb: 0.1
+      environmentVariables:
+        - name: 'PROTOCOL'
+          value: '003-PsddFKi3'
+      volumeMounts:
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
+
+  - name: tezos-accuser-004-pt24m4xi
+    properties:
+      image: tezos/tezos:alphanet
+      command:
+      - 'tezos-accuser'
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGb: 0.1
+        limits:
+          cpu: 0.1
+          memoryInGb: 0.1
+      environmentVariables:
+        - name: 'PROTOCOL'
+          value: '003-004-Pt24m4xi'
+      volumeMounts:
+      - name: client-data
+        mountPath: '/var/run/tezos/client'
+        readOnly: false
